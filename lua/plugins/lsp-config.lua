@@ -3,15 +3,15 @@ return {
     "williamboman/mason.nvim",
     config = function()
       require("mason").setup()
-    end
+    end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ts_ls" }
+        ensure_installed = { "lua_ls", "ts_ls" },
       })
-    end
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -20,10 +20,10 @@ return {
       lspconfig.lua_ls.setup({})
       lspconfig.ts_ls.setup({})
 
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})--ver a documentação
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})-- Ir para definição
-      vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, {})-- Ir para declaração
-      vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, {})-- Ações de código
-    end
-  }
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, {})                      --ver a documentação
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})                -- Ir para definição
+      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, {})               -- Ir para declaração
+      vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {}) -- Ações de código
+    end,
+  },
 }
