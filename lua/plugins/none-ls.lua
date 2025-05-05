@@ -9,6 +9,10 @@ return {
 				null_ls.builtins.diagnostics.rubocop,
 				null_ls.builtins.formatting.rubocop,
 				null_ls.builtins.formatting.prettier,
+				-- Formatador: goimports (formata e organiza imports)
+				null_ls.builtins.formatting.goimports,
+				-- Linter: revive (análise estática mais moderna que golint)
+				null_ls.builtins.diagnostics.revive,
 			},
 		})
 		vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
