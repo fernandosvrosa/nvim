@@ -38,6 +38,11 @@ return {
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
       })
+
+      lspconfig.clojure_lsp.setup({
+        capabilities = capabilities
+      })
+
       -- Opções padrão para os atalhos
       local opts = { noremap = true, silent = true }
 
