@@ -16,6 +16,12 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 vim.wo.number = true
 
+vim.g["sexp_filetypes"] = "clojure,fennel,janet"
+
+-- Conjure leader
+vim.g.maplocalleader = ","
+
+
 if string.find(vim.fn.system("uname -r"), "WSL") then
 	vim.opt.clipboard = "unnamedplus"
 	vim.g.clipboard = {

@@ -51,10 +51,27 @@ return {
 	},
 	{
 		"guns/vim-sexp",
-		ft = "clojure",
+		ft = { "clojure", "fennel", "janet" }, -- ativa só nesses tipos
 	},
 	{
 		"tpope/vim-sexp-mappings-for-regular-people",
-		ft = "clojure",
+		ft = { "clojure", "fennel", "janet" }, -- ativa só nesses tipos
+		dependencies = { "guns/vim-sexp" },
+	},
+	{
+		"eraserhd/parinfer-rust",
+		build = "cargo build --release",
+		ft = { "clojure", "fennel", "janet" },
+		config = function()
+			vim.g.parinfer_mode = "smart"
+		end,
+	},
+	{
+		"tpope/vim-repeat",
+		event = "VeryLazy",
+	},
+	{
+		"gpanders/nvim-parinfer",
+		ft = { "clojure" },
 	},
 }
