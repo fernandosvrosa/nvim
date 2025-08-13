@@ -13,6 +13,8 @@ return {
 				null_ls.builtins.formatting.goimports,
 				-- Linter: revive (análise estática mais moderna que golint)
 				null_ls.builtins.diagnostics.revive,
+				-- Linter para Clojure
+				null_ls.builtins.diagnostics.clj_kondo,
 			},
 		})
 		vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
