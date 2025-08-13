@@ -1,0 +1,3 @@
+-- Defina seus atalhos de teclado aqui
+-- Exemplo:
+-- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
