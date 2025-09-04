@@ -14,7 +14,13 @@ vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
 vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
-vim.wo.number = true
+-- vim.wo.number = true
+
+-- Ativa a numeração de linha
+vim.opt.nu = true
+
+-- Ativa a numeração de linha relativa
+vim.opt.rnu = true
 
 vim.g["sexp_filetypes"] = "clojure,fennel,janet"
 
