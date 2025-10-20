@@ -23,29 +23,55 @@ return {
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local lspconfig = require("lspconfig")
+      -- Use the new vim.lsp.config API instead of require('lspconfig')
+      -- The new API: access server configs through vim.lsp.config._configs
+      -- and configure them using the setup method
+      
+      -- Configure LSP servers using the new API
+      -- Each server configuration is accessed through vim.lsp.config._configs
+      local configs = vim.lsp.config._configs
+      
+      -- Configure gopls
+      if configs.gopls then
+        configs.gopls.setup({
+          capabilities = capabilities,
+        })
+      end
 
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
-      })
+      -- Configure TypeScript Language Server
+      if configs.ts_ls then
+        configs.ts_ls.setup({
+          capabilities = capabilities,
+        })
+      end
 
-      lspconfig.ts_ls.setup({
-        capabilities = capabilities,
-      })
+      -- Configure Solargraph (Ruby)
+      if configs.solargraph then
+        configs.solargraph.setup({
+          capabilities = capabilities,
+        })
+      end
 
-      lspconfig.solargraph.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.html.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-      })
+      -- Configure HTML Language Server
+      if configs.html then
+        configs.html.setup({
+          capabilities = capabilities,
+        })
+      end
 
-      lspconfig.clojure_lsp.setup({
-        capabilities = capabilities
-      })
+      -- Configure Lua Language Server
+      if configs.lua_ls then
+        configs.lua_ls.setup({
+          capabilities = capabilities,
+        })
+      end
+
+      -- Configure Clojure LSP
+      if configs.clojure_lsp then
+        configs.clojure_lsp.setup({
+          capabilities = capabilities,
+        })
+      end
 
       -- Opções padrão para os atalhos
       local opts = { noremap = true, silent = true }
