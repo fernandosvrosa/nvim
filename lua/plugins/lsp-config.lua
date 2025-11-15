@@ -35,6 +35,21 @@ return {
       if configs.gopls then
         configs.gopls.setup({
           capabilities = capabilities,
+          settings = {
+            gopls = {
+              ui = {
+                semanticTokens = true,
+              },
+              codelenses = {
+                test = true,
+              },
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+                nilness = true,
+              },
+            },
+          },
         })
       end
 

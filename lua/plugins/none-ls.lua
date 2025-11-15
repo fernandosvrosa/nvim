@@ -11,8 +11,8 @@ return {
 				null_ls.builtins.formatting.prettier,
 				-- Formatador: goimports (formata e organiza imports)
 				null_ls.builtins.formatting.goimports,
-				-- Linter: revive (análise estática mais moderna que golint)
-				null_ls.builtins.diagnostics.revive,
+				-- Linter: golangci-lint (padrão da comunidade Go, super completo)
+				null_ls.builtins.diagnostics.golangci_lint,
 				-- Linter para Clojure
 				null_ls.builtins.diagnostics.clj_kondo,
 			},
