@@ -1,25 +1,46 @@
 return {
   {
     "williamboman/mason.nvim",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       require("mason").setup({
         ensure_installed = {
+          -- Go
+          "gopls",
+          "gofumpt",
+          "goimports",
+          "golangci-lint",
+          -- Java
+          "jdtls",
+          "java-debug-adapter",
+          "vscode-java-test",
+          -- Kotlin
+          "kotlin-language-server",
+          "ktlint",
+          -- Clojure
+          "clojure-lsp",
           "clj-kondo",
+          "zprint",
+          -- TS/JS
+          "vtsls",
+          "prettierd",
+          -- Lua
+          "lua-language-server",
+          "stylua",
         },
       })
     end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    lazy = false,
+    event = "VeryLazy",
     opts = {
       auto_install = true,
     },
   },
   {
     "neovim/nvim-lspconfig",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -47,15 +68,23 @@ return {
                 unusedparams = true,
                 shadow = true,
                 nilness = true,
+                staticcheck = true,
               },
             },
           },
         })
       end
 
-      -- Configure TypeScript Language Server
-      if configs.ts_ls then
-        configs.ts_ls.setup({
+      -- Configure vtsls (TypeScript/JavaScript)
+      if configs.vtsls then
+        configs.vtsls.setup({
+          capabilities = capabilities,
+        })
+      end
+
+      -- Configure Kotlin Language Server
+      if configs.kotlin_language_server then
+        configs.kotlin_language_server.setup({
           capabilities = capabilities,
         })
       end
