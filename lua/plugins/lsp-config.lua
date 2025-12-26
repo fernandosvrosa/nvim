@@ -7,9 +7,6 @@ return {
         ensure_installed = {
           -- Go
           "gopls",
-          "gofumpt",
-          "goimports",
-          "golangci-lint",
           -- Java
           "jdtls",
           "java-debug-adapter",
@@ -19,14 +16,10 @@ return {
           "ktlint",
           -- Clojure
           "clojure-lsp",
-          "clj-kondo",
-          "zprint",
           -- TS/JS
           "vtsls",
-          "prettierd",
           -- Lua
           "lua-language-server",
-          "stylua",
         },
       })
     end,
@@ -34,9 +27,6 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     event = "VeryLazy",
-    opts = {
-      auto_install = true,
-    },
   },
   {
     "neovim/nvim-lspconfig",

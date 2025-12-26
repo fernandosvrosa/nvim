@@ -1,27 +1,38 @@
 return {
-	"nvimtools/none-ls.nvim",
-    event = "VeryLazy",
-	config = function()
-		local null_ls = require("null-ls")
+  "nvimtools/none-ls.nvim",
+  event = "VeryLazy",
+  dependencies = {
+    "jay-babu/mason-null-ls.nvim",
+  },
+  config = function()
+    local null_ls = require("null-ls")
+    local mason_null_ls = require("mason-null-ls")
 
-		null_ls.setup({
-			sources = {
-				-- Lua
-				null_ls.builtins.formatting.stylua,
-				-- JS/TS
-				null_ls.builtins.formatting.prettierd,
-				-- Go
-				null_ls.builtins.formatting.goimports,
-				null_ls.builtins.formatting.gofumpt,
-				null_ls.builtins.diagnostics.golangci_lint,
-				-- Clojure
-				null_ls.builtins.diagnostics.clj_kondo,
-				null_ls.builtins.formatting.zprint,
-				-- Ruby
-				null_ls.builtins.diagnostics.rubocop,
-				null_ls.builtins.formatting.rubocop,
-			},
-		})
-		vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
-	end,
+    mason_null_ls.setup({
+      -- A list of formatters & linters to be installed with mason-null-ls
+      ensure_installed = {
+        -- Lua
+        "stylua",
+        -- JS/TS
+        "prettierd",
+        -- Go
+        "goimports",
+        "gofumpt",
+        "golangci-lint",
+        -- Clojure
+        "clj-kondo",
+        "zprint",
+        -- Ruby
+        "rubocop",
+      },
+      automatic_installation = true,
+      handlers = {},
+    })
+
+    null_ls.setup({
+      sources = {}, -- mason-null-ls handles all the sources
+    })
+
+    vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+  end,
 }
