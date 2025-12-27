@@ -27,101 +27,96 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     event = "VeryLazy",
+    config = function()
+      require("mason-lspconfig").setup_handlers({
+        function(server_name)
+          require("lspconfig")[server_name].setup({})
+        end,
+      })
+    end,
   },
   {
     "neovim/nvim-lspconfig",
     event = "VeryLazy",
     config = function()
+      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Use the new vim.lsp.config API instead of require('lspconfig')
-      -- The new API: access server configs through vim.lsp.config._configs
-      -- and configure them using the setup method
-      
-      -- Configure LSP servers using the new API
-      -- Each server configuration is accessed through vim.lsp.config._configs
-      local configs = vim.lsp.config._configs
-      
+      local on_attach = function(client, bufnr)
+        -- Opções padrão para os atalhos
+        local opts = { noremap = true, silent = true, buffer = bufnr }
+
+        -- Função auxiliar para facilitar o uso de desc
+        local function map(mode, lhs, rhs, desc)
+          vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
+        end
+
+        -- Mapeamentos LSP com descrições
+        map("n", "K", vim.lsp.buf.hover, "Mostrar documentação flutuante")
+        map("n", "gd", vim.lsp.buf.definition, "Ir para definição")
+        map("n", "gD", vim.lsp.buf.declaration, "Ir para declaração")
+        map("n", "gi", vim.lsp.buf.implementation, "Ir para implementação")
+        map("n", "<leader>gr", vim.lsp.buf.references, "Listar referências")
+        map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Ações de código disponíveis")
+      end
+
       -- Configure gopls
-      if configs.gopls then
-        configs.gopls.setup({
-          capabilities = capabilities,
-          settings = {
-            gopls = {
-              ui = {
-                semanticTokens = true,
-              },
-              codelenses = {
-                test = true,
-              },
-              analyses = {
-                unusedparams = true,
-                shadow = true,
-                nilness = true,
-                staticcheck = true,
-              },
+      lspconfig.gopls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            ui = {
+              semanticTokens = true,
+            },
+            codelenses = {
+              test = true,
+            },
+            analyses = {
+              unusedparams = true,
+              shadow = true,
+              nilness = true,
+              staticcheck = true,
             },
           },
-        })
-      end
+        },
+      })
 
       -- Configure vtsls (TypeScript/JavaScript)
-      if configs.vtsls then
-        configs.vtsls.setup({
-          capabilities = capabilities,
-        })
-      end
+      lspconfig.vtsls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       -- Configure Kotlin Language Server
-      if configs.kotlin_language_server then
-        configs.kotlin_language_server.setup({
-          capabilities = capabilities,
-        })
-      end
+      lspconfig.kotlin_language_server.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       -- Configure Solargraph (Ruby)
-      if configs.solargraph then
-        configs.solargraph.setup({
-          capabilities = capabilities,
-        })
-      end
+      lspconfig.solargraph.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       -- Configure HTML Language Server
-      if configs.html then
-        configs.html.setup({
-          capabilities = capabilities,
-        })
-      end
+      lspconfig.html.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       -- Configure Lua Language Server
-      if configs.lua_ls then
-        configs.lua_ls.setup({
-          capabilities = capabilities,
-        })
-      end
+      lspconfig.lua_ls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
 
       -- Configure Clojure LSP
-      if configs.clojure_lsp then
-        configs.clojure_lsp.setup({
-          capabilities = capabilities,
-        })
-      end
-
-      -- Opções padrão para os atalhos
-      local opts = { noremap = true, silent = true }
-
-      -- Função auxiliar para facilitar o uso de desc
-      local function map(mode, lhs, rhs, desc)
-        vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
-      end
-
-      -- Mapeamentos LSP com descrições
-      map("n", "K", vim.lsp.buf.hover, "Mostrar documentação flutuante")
-      map("n", "gd", vim.lsp.buf.definition, "Ir para definição")
-      map("n", "gD", vim.lsp.buf.declaration, "Ir para declaração")
-      map("n", "gi", vim.lsp.buf.implementation, "Ir para implementação")
-      map("n", "<leader>gr", vim.lsp.buf.references, "Listar referências")
-      map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Ações de código disponíveis")
+      lspconfig.clojure_lsp.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
     end,
   },
 }
