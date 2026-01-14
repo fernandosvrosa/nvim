@@ -23,7 +23,7 @@ return {
         "clj-kondo",
         "zprint",
         -- Ruby
-        "rubocop",
+        --"rubocop",
       },
       automatic_installation = true,
       handlers = {},
