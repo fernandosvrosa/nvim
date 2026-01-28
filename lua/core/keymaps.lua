@@ -40,3 +40,24 @@ vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "Goto Implementat
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto T[y]pe Definition" })
 -- Ir para a Declaração (menos usado que gd, mas útil em C/C++ ou headers)
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })
+
+-- Renomear símbolo (o LazyVim costuma usar <leader>cr)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+
+-- Ações de código (Lâmpada do VS Code)
+vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+
+-- Renomear símbolo (o LazyVim costuma usar <leader>cr)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+
+-- Ações de código (Lâmpada do VS Code)
+vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+
+-- Pular para o próximo erro/aviso
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+
+-- Pular para o erro anterior
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev Diagnostic" })
+
+-- Abrir o erro atual em uma janelinha flutuante (Floating Window)
+vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
