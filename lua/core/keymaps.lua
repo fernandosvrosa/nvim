@@ -47,9 +47,6 @@ vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" }
 -- Ações de código (Lâmpada do VS Code)
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
 
--- Renomear símbolo (o LazyVim costuma usar <leader>cr)
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
-
 -- Ações de código (Lâmpada do VS Code)
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
 
