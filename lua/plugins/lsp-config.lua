@@ -29,20 +29,24 @@ return {
     local lspconfig = require "lspconfig"
 
     require("mason-lspconfig").setup({
+      -- Evita que mason-lspconfig ative automaticamente pacotes Mason
+      -- que são formatters (ex: stylua), conflitando com none-ls
+      automatic_enable = {
+        exclude = { "stylua" },
+      },
       ensure_installed = {
         -- Go
         "gopls",
         -- Java
         "jdtls",
-        "java-debug-adapter",
-        "vscode-java-test",
         -- Kotlin
-        "kotlin-language-server",
-        "ktlint",
+        "kotlin_language_server",
         -- Clojure
-        "clojure-lsp",
+        "clojure_lsp",
         -- TS/JS
         "vtsls",
+        -- Elixir
+        "elixirls",
         -- Lua
         "lua_ls",
       },

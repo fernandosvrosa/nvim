@@ -12,6 +12,7 @@ return {
       spec = {
         {
           mode = { "n", "v" },
+          { "<leader>a", group = "AI" }, -- Claude Code
           { "<leader>c", group = "Code" }, -- Code actions
           { "<leader>d", group = "Debug" }, -- Debugging
           { "<leader>e", desc = "File Explorer" }, -- NeoTree

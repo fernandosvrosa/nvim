@@ -30,7 +30,10 @@ return {
     })
 
     null_ls.setup({
-      sources = {}, -- mason-null-ls handles all the sources
+      sources = {
+        -- Elixir: mix format é parte do toolchain, não um pacote Mason
+        null_ls.builtins.formatting.mix,
+      },
     })
 
     vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})

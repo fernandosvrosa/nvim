@@ -68,12 +68,12 @@ return {
 			local map = vim.keymap.set
 			local opts = { noremap = true, silent = true }
 
-			map("n", "<F5>", ":lua require'dap'.continue()<CR>", opts)
-			map("n", "<F10>", ":lua require'dap'.step_over()<CR>", opts)
-			map("n", "<F11>", ":lua require'dap'.step_into()<CR>", opts)
-			map("n", "<F12>", ":lua require'dap'.step_out()<CR>", opts)
-			map("n", "<leader>db", ":lua require'dap'.toggle_breakpoint()<CR>", { desc = "Breakpoint" })
-			map("n", "<leader>dr", ":lua require'dap'.repl.toggle()<CR>", { desc = "Toggle REPL" })
+			map("n", "<F5>", function() dap.continue() end, opts)
+			map("n", "<F10>", function() dap.step_over() end, opts)
+			map("n", "<F11>", function() dap.step_into() end, opts)
+			map("n", "<F12>", function() dap.step_out() end, opts)
+			map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Breakpoint" })
+			map("n", "<leader>dr", function() dap.repl.toggle() end, { desc = "Toggle REPL" })
 		end,
 	},
 }
