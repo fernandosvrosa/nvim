@@ -8,21 +8,27 @@ return {
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     local on_attach = function(client, bufnr)
-      -- Opções padrão para os atalhos
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-
-      -- Função auxiliar para facilitar o uso de desc
       local function map(mode, lhs, rhs, desc)
-        vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
+        vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = bufnr, desc = desc })
       end
 
-      -- Mapeamentos LSP com descrições
-      map("n", "K", vim.lsp.buf.hover, "Mostrar documentação flutuante")
-      map("n", "gd", vim.lsp.buf.definition, "Ir para definição")
-      map("n", "gD", vim.lsp.buf.declaration, "Ir para declaração")
-      map("n", "gi", vim.lsp.buf.implementation, "Ir para implementação")
-      map("n", "<leader>gr", vim.lsp.buf.references, "Listar referências")
-      map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Ações de código disponíveis")
+      -- Navegação LSP
+      map("n", "K",          vim.lsp.buf.hover,           "Hover Documentation")
+      map("n", "gd",         vim.lsp.buf.definition,      "Goto Definition")
+      map("n", "gD",         vim.lsp.buf.declaration,     "Goto Declaration")
+      map("n", "gI",         vim.lsp.buf.implementation,  "Goto Implementation")
+      map("n", "gy",         vim.lsp.buf.type_definition, "Goto T[y]pe Definition")
+      map("n", "gr",         vim.lsp.buf.references,      "Goto References")
+
+      -- Ações
+      map("n",        "<leader>rn", vim.lsp.buf.rename,      "Rename Symbol")
+      map({ "n","v"}, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+      map("n",        "<leader>gf", vim.lsp.buf.format,      "Format Buffer")
+
+      -- Diagnósticos
+      map("n", "]d",        vim.diagnostic.goto_next,  "Next Diagnostic")
+      map("n", "[d",        vim.diagnostic.goto_prev,  "Prev Diagnostic")
+      map("n", "<leader>cd", vim.diagnostic.open_float, "Line Diagnostics")
     end
 
     require("mason").setup()

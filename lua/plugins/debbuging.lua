@@ -68,10 +68,10 @@ return {
 			local map = vim.keymap.set
 			local opts = { noremap = true, silent = true }
 
-			map("n", "<F5>", function() dap.continue() end, opts)
-			map("n", "<F10>", function() dap.step_over() end, opts)
-			map("n", "<F11>", function() dap.step_into() end, opts)
-			map("n", "<F12>", function() dap.step_out() end, opts)
+			map("n", "<F5>",  function() dap.continue()   end, { desc = "DAP: Continue" })
+			map("n", "<F10>", function() dap.step_over()  end, { desc = "DAP: Step Over" })
+			map("n", "<F11>", function() dap.step_into()  end, { desc = "DAP: Step Into" })
+			map("n", "<F12>", function() dap.step_out()   end, { desc = "DAP: Step Out" })
 			map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Breakpoint" })
 			map("n", "<leader>dr", function() dap.repl.toggle() end, { desc = "Toggle REPL" })
 		end,

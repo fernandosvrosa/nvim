@@ -34,7 +34,7 @@ return {
 					map(
 						"n",
 						"<leader>er",
-						"<cmd>ConjureEvalCurrentForm<CR><cmd>ConjureEval<CR>",
+						"<cmd>ConjureEval (require (ns-name *ns*) :reload)<CR>",
 						vim.tbl_extend("force", opts, { desc = "Eval: Reload NS" })
 					)
 

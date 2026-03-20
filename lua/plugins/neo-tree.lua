@@ -10,8 +10,7 @@ return {
 		lazy = false,
 		opts = {},
 		config = function()
-			-- vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>', {})
-			vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { noremap = true, silent = true })
+			vim.keymap.set("n", "<leader>e", function() vim.cmd("Neotree toggle") end, { noremap = true, silent = true, desc = "Toggle NeoTree" })
 		end,
 	},
 }
