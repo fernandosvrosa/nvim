@@ -16,7 +16,7 @@ return {
       map("n", "K",          vim.lsp.buf.hover,           "Hover Documentation")
       map("n", "gd",         vim.lsp.buf.definition,      "Goto Definition")
       map("n", "gD",         vim.lsp.buf.declaration,     "Goto Declaration")
-      map("n", "gI",         vim.lsp.buf.implementation,  "Goto Implementation")
+      map("n", "gi",         vim.lsp.buf.implementation,  "Goto Implementation")
       map("n", "gy",         vim.lsp.buf.type_definition, "Goto T[y]pe Definition")
       map("n", "gr",         vim.lsp.buf.references,      "Goto References")
 

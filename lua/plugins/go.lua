@@ -6,8 +6,8 @@ return {
   },
   config = function()
     require("go").setup({
-      -- Configuration options for go.nvim
-      -- You can customize this later if you want
+      lsp_cfg = false,  -- LSP gerenciado pelo mason-lspconfig/lsp-config.lua
+      lsp_keymaps = false, -- keymaps LSP definidos em lsp-config.lua
     })
 
     -- Keymaps for go.nvim functionalities
