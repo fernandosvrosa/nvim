@@ -7,29 +7,33 @@ return {
   config = function()
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    local on_attach = function(client, bufnr)
-      local function map(mode, lhs, rhs, desc)
-        vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = bufnr, desc = desc })
-      end
+    -- LspAttach funciona com automatic_enable (Neovim 0.11+)
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local bufnr = args.buf
+        local function map(mode, lhs, rhs, desc)
+          vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = bufnr, desc = desc })
+        end
 
-      -- Navegação LSP
-      map("n", "K",          vim.lsp.buf.hover,           "Hover Documentation")
-      map("n", "gd",         vim.lsp.buf.definition,      "Goto Definition")
-      map("n", "gD",         vim.lsp.buf.declaration,     "Goto Declaration")
-      map("n", "gi",         vim.lsp.buf.implementation,  "Goto Implementation")
-      map("n", "gy",         vim.lsp.buf.type_definition, "Goto T[y]pe Definition")
-      map("n", "gr",         vim.lsp.buf.references,      "Goto References")
+        -- Navegação LSP
+        map("n", "K",           vim.lsp.buf.hover,           "Hover Documentation")
+        map("n", "gd",          vim.lsp.buf.definition,      "Goto Definition")
+        map("n", "gD",          vim.lsp.buf.declaration,     "Goto Declaration")
+        map("n", "gi",          vim.lsp.buf.implementation,  "Goto Implementation")
+        map("n", "gy",          vim.lsp.buf.type_definition, "Goto T[y]pe Definition")
+        map("n", "gr",          vim.lsp.buf.references,      "Goto References")
 
-      -- Ações
-      map("n",        "<leader>rn", vim.lsp.buf.rename,      "Rename Symbol")
-      map({ "n","v"}, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-      map("n",        "<leader>gf", vim.lsp.buf.format,      "Format Buffer")
+        -- Ações
+        map("n",         "<leader>rn", vim.lsp.buf.rename,      "Rename Symbol")
+        map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+        map("n",         "<leader>gf", vim.lsp.buf.format,      "Format Buffer")
 
-      -- Diagnósticos
-      map("n", "]d",        vim.diagnostic.goto_next,  "Next Diagnostic")
-      map("n", "[d",        vim.diagnostic.goto_prev,  "Prev Diagnostic")
-      map("n", "<leader>cd", vim.diagnostic.open_float, "Line Diagnostics")
-    end
+        -- Diagnósticos
+        map("n", "]d",         vim.diagnostic.goto_next,  "Next Diagnostic")
+        map("n", "[d",         vim.diagnostic.goto_prev,  "Prev Diagnostic")
+        map("n", "<leader>cd", vim.diagnostic.open_float, "Line Diagnostics")
+      end,
+    })
 
     require("mason").setup()
     local lspconfig = require "lspconfig"
@@ -59,14 +63,12 @@ return {
       handlers = {
         function(server_name)
           local opts = {
-            on_attach = on_attach,
             capabilities = capabilities,
           }
           lspconfig[server_name].setup(opts)
         end,
         ["gopls"] = function()
           local opts = {
-            on_attach = on_attach,
             capabilities = capabilities,
             settings = {
               gopls = {
