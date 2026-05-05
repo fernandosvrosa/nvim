@@ -8,12 +8,6 @@ map("n", "<C-j>", "<C-w>j", { desc = "Navegar para baixo" })
 map("n", "<C-k>", "<C-w>k", { desc = "Navegar para cima" })
 map("n", "<C-l>", "<C-w>l", { desc = "Navegar para direita" })
 
--- Redimensionar janelas com as setas
-map("n", "<Up>", ":resize +2<CR>", { desc = "Aumentar altura" })
-map("n", "<Down>", ":resize -2<CR>", { desc = "Diminuir altura" })
-map("n", "<Left>", ":vertical resize -2<CR>", { desc = "Diminuir largura" })
-map("n", "<Right>", ":vertical resize +2<CR>", { desc = "Aumentar largura" })
-
 -- Mover texto selecionado no modo Visual
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Mover texto para baixo" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Mover texto para cima" })

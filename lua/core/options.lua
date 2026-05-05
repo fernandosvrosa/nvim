@@ -6,6 +6,17 @@ vim.g.mapleader = " "
 
 vim.opt.swapfile = false
 
+-- Recarrega automaticamente arquivos editados fora do Neovim
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  pattern = "*",
+  callback = function()
+    if vim.fn.mode() ~= "c" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
 -- vim.wo.number = true
 
 -- Ativa a numeração de linha
