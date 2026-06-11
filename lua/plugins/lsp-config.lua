@@ -29,8 +29,8 @@ return {
         map("n",         "<leader>gf", vim.lsp.buf.format,      "Format Buffer")
 
         -- Diagnósticos
-        map("n", "]d",         vim.diagnostic.goto_next,  "Next Diagnostic")
-        map("n", "[d",         vim.diagnostic.goto_prev,  "Prev Diagnostic")
+        map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end,  "Next Diagnostic")
+        map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "Prev Diagnostic")
         map("n", "<leader>cd", vim.diagnostic.open_float, "Line Diagnostics")
       end,
     })

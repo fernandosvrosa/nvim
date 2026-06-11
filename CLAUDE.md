@@ -13,8 +13,8 @@
 │       ├── lsp-config.lua    # nvim-lspconfig + mason + mason-lspconfig
 │       ├── completions.lua   # nvim-cmp + LuaSnip + friendly-snippets
 │       ├── treesitter.lua    # nvim-treesitter
-│       ├── telescope.lua     # telescope + telescope-ui-select
-│       ├── none-ls.lua       # none-ls (null-ls) + mason-null-ls (formatters/linters)
+│       ├── telescope.lua     # telescope + telescope-ui-select + telescope-fzf-native
+│       ├── none-ls.lua       # none-ls (null-ls) + mason-null-ls (formatters/linters) + format-on-save
 │       ├── debbuging.lua     # nvim-dap + dapui + dap-go + dap-vscode-js
 │       ├── gitsigns.lua      # gitsigns (hunks, blame, diff)
 │       ├── neo-tree.lua      # neo-tree (file explorer)
@@ -92,6 +92,8 @@
 
 - `mason-lspconfig.ensure_installed` aceita **nomes do lspconfig** (underscores): `kotlin_language_server`, `clojure_lsp`, `elixirls`, etc. Adapters DAP (`java-debug-adapter`, `vscode-java-test`) e linters (`ktlint`) **não** devem estar aqui.
 - Linters/formatters ficam em `mason-null-ls.ensure_installed` (em `none-ls.lua`). Formatters que fazem parte do toolchain da linguagem (ex: `mix format` do Elixir) devem ser adicionados como `sources` explícitos no `null_ls.setup`, não via Mason.
+- **Format-on-save**: configurado em `none-ls.lua` via `on_attach` do null-ls (autocmd `BufWritePre`, augroup `LspFormatting`). O `vim.lsp.buf.format` usa `filter` para rodar **apenas** os formatters do none-ls (`c.name == "null-ls"`), evitando dupla formatação com o LSP da linguagem (ex: gopls). Formatação manual também disponível em `<leader>gf` (LSP).
+- **Telescope**: usa `telescope-fzf-native` (compilado via `make`, requer toolchain C) para busca fuzzy rápida. Setup, extensões (`ui-select`, `fzf`) e keymaps ficam todos no mesmo bloco em `telescope.lua`.
 - Parinfer: `parinfer-rust` está comentado em `conjure-repl.lua` pois requer `cargo` (Rust) para compilar. Para ativar, instalar Rust (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`) e descomentar a linha.
 - **Treesitter**: usa o branch `main` (nova API). NÃO usa `setup()` com `ensure_installed`/`highlight`/`auto_install` — essas opções não existem mais. O highlight é automático via ftplugin. Para instalar parsers: `:TSInstall <lang>`. Requer `tree-sitter-cli` instalado (`npm install -g tree-sitter-cli`). Parsers instalados: lua, vim, bash, json, yaml, markdown, markdown_inline, typescript, tsx, javascript, go, kotlin, clojure, elixir, heex, python, query, regex, gomod, gowork, gosum, html.
 - `mason-lspconfig` tem `automatic_enable = { exclude = { "stylua" } }` para evitar que o stylua seja ativado como LSP server (conflito com none-ls que já o usa como formatter).

@@ -1,10 +1,24 @@
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=2")
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
+
+-- Cores true-color (necessário para o catppuccin renderizar corretamente)
+vim.opt.termguicolors = true
+
+-- Qualidade de vida
+vim.opt.signcolumn = "yes"   -- evita o texto "pulando" com gitsigns/diagnósticos
+vim.opt.scrolloff = 8        -- mantém contexto ao rolar
+vim.opt.ignorecase = true
+vim.opt.smartcase = true     -- busca sensível a maiúsculas só quando há maiúsculas
+vim.opt.undofile = true      -- undo persistente entre sessões
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.cursorline = true
+vim.opt.updatetime = 250     -- mais responsivo (default 4000ms; afeta autoread no CursorHold)
 
 -- Recarrega automaticamente arquivos editados fora do Neovim
 vim.opt.autoread = true
