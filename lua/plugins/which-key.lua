@@ -19,6 +19,7 @@ return {
           { "<leader>f", group = "Find" }, -- Telescope
           { "<leader>g", group = "Git / LSP" }, -- Git or LSP related
           { "<leader>h", group = "Git Hunk" }, -- Git Hunk actions
+          { "<leader>m", group = "Markdown" }, -- render-markdown + live-preview
           { "<leader>t", group = "Test / Go Tools" }, -- Testing and language specific tools
           
           -- Direct mappings descriptions can be reinforced here if needed,

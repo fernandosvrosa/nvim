@@ -25,6 +25,7 @@
 │       ├── catppuccin.lua    # colorscheme catppuccin (tema principal)
 │       ├── copilot.lua       # github copilot
 │       ├── kulala.lua        # cliente HTTP (.http files)
+│       ├── markdown.lua      # render-markdown (render no buffer) + live-preview (preview no navegador)
 │       ├── go.lua            # go.nvim (GoTest, GoCoverage, AddTags)
 │       ├── oil.lua           # oil.nvim
 │       ├── autopairs.lua     # nvim-autopairs
@@ -74,6 +75,7 @@
 - `<leader>rn` — rename symbol
 - `<leader>db` — DAP toggle breakpoint
 - `<leader>rr/rs/ra/rt/rh` — Kulala HTTP
+- `<leader>mr/mp/ms/mf` — Markdown: toggle render / iniciar preview / parar preview / escolher arquivo
 - `<leader>ai` — Claude Code CLI (toggleterm float)
 - `<leader>rc` — Clojure REPL (toggleterm)
 - `<leader>ee/ef/er/ed` — Conjure eval (só em buffers Clojure)
