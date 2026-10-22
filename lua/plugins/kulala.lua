@@ -1,6 +1,6 @@
 return {
   {
-    "mistweaverco/kulala.nvim",
+    "dont-be-evil-company/kulala.nvim",
     keys = {
       -- Tente este se o show_results falhar: ele re-executa a última chamando a janela
       { "<leader>rs", function() require("kulala").replay() end, desc = "Kulala: Repetir/Mostrar última resposta" },
