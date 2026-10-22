@@ -1,87 +1,355 @@
-## Welcome with my nvim config 
+## Welcome with my nvim config
 
-If you are unable to search with telescope, run this command to see if you have installed the dependencies it needs on the OS.
+Configuração do Neovim usando [lazy.nvim](https://github.com/folke/lazy.nvim). Os plugins são instalados sozinhos na primeira vez que o Neovim abre; os servidores LSP, formatters e linters são instalados pelo [Mason](https://github.com/williamboman/mason.nvim). O que **não** é instalado automaticamente está listado abaixo.
 
+## 📦 Requisitos
+
+### Obrigatórios
+
+| Ferramenta | Para quê | Arch Linux | Ubuntu/Debian | macOS (Homebrew) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Neovim 0.12+** | O nvim-treesitter (branch `main`) exige 0.12 | `pacman -S neovim` | [AppImage/PPA](https://github.com/neovim/neovim/blob/master/INSTALL.md) | `brew install neovim` |
+| **git** | lazy.nvim baixa os plugins via git | `pacman -S git` | `apt install git` | `brew install git` |
+| **Nerd Font** | Ícones (neo-tree, lualine, render-markdown) | `pacman -S ttf-jetbrains-mono-nerd` | [nerdfonts.com](https://www.nerdfonts.com/) | `brew install --cask font-jetbrains-mono-nerd-font` |
+| **make + gcc** | Compilar `telescope-fzf-native` e os parsers do treesitter | `pacman -S base-devel` | `apt install build-essential` | `xcode-select --install` |
+| **tree-sitter-cli** | Instalar parsers com `:TSInstall` | `pacman -S tree-sitter-cli` | `npm install -g tree-sitter-cli` | `brew install tree-sitter-cli` |
+| **ripgrep** | Busca de texto do Telescope (`<leader>fg`) | `pacman -S ripgrep` | `apt install ripgrep` | `brew install ripgrep` |
+| **fd** | Busca de arquivos do Telescope (opcional, mais rápido) | `pacman -S fd` | `apt install fd-find` | `brew install fd` |
+| **Node.js + npm** | Copilot, vtsls, prettierd e debugger JS | `pacman -S nodejs npm` | [nodejs.org](https://nodejs.org/) | `brew install node` |
+| **curl, unzip, tar, gzip** | Usados pelo Mason para baixar as ferramentas | `pacman -S curl unzip` | `apt install curl unzip` | já vem no sistema |
+
+### Cliente HTTP (hurl.nvim)
+
+| Ferramenta | Para quê | Arch Linux | Ubuntu/Debian | macOS (Homebrew) |
+| :--- | :--- | :--- | :--- | :--- |
+| **[hurl](https://hurl.dev)** | Executa as requisições dos arquivos `.hurl` | `pacman -S hurl` | [.deb do release](https://hurl.dev/docs/installation.html#debian--ubuntu) | `brew install hurl` |
+| **jq** | Formata respostas JSON | `pacman -S jq` | `apt install jq` | `brew install jq` |
+| prettier *(opcional)* | Formata respostas HTML | `npm install -g prettier` | `npm install -g prettier` | `npm install -g prettier` |
+| tidy *(opcional)* | Formata respostas XML | `pacman -S tidy` | `apt install tidy` | `brew install tidy-html5` |
+
+Depois de instalar, rode `:TSInstall hurl` para ter o highlight dos arquivos `.hurl`.
+
+### Por linguagem (só instale as que você usa)
+
+| Linguagem | O que instalar | Observação |
+| :--- | :--- | :--- |
+| **Go** | [Go](https://go.dev/dl/) + delve (`go install github.com/go-delve/delve/cmd/dlv@latest`) | `gopls`, `goimports`, `gofumpt` e `golangci-lint` vêm pelo Mason. |
+| **Java / Kotlin** | JDK 21+ | `jdtls` e `kotlin_language_server` vêm pelo Mason. |
+| **Clojure** | JDK + [Clojure CLI](https://clojure.org/guides/install_clojure) (`clj`) | Usado pelo REPL (`<leader>rc`) e pelo Conjure. `clojure_lsp`, `clj-kondo` e `zprint` vêm pelo Mason. |
+| **Elixir** | [Elixir](https://elixir-lang.org/install.html) (inclui `mix`) | `mix format` é usado como formatter. `elixirls` vem pelo Mason. |
+| **TypeScript / JavaScript** | Node.js | `vtsls` e `prettierd` vêm pelo Mason. |
+| **Lua** | — | `lua_ls` e `stylua` vêm pelo Mason. |
+
+### Opcionais
+
+| Ferramenta | Para quê |
+| :--- | :--- |
+| [Rust/cargo](https://rustup.rs) | Ativar o `parinfer-rust` (comentado em `conjure-repl.lua`). |
+| [Claude Code](https://claude.com/claude-code) (`claude`) | Terminal do Claude em `<leader>ai`. |
+| Conta do GitHub Copilot | Rodar `:Copilot setup` na primeira vez. |
+| WSL | O clipboard do Windows é detectado sozinho (usa `clip.exe` e `powershell.exe`). |
+
+### Verificando a instalação
 
 ```
+:checkhealth
 :checkhealth telescope
+:checkhealth render-markdown
+:Mason
 ```
-
-## Go Development Dependencies
-
-For Go development, you need to install the following tools:
-
-- **gopls (Language Server):**
-  ```bash
-  go install golang.org/x/tools/gopls@latest
-  ```
-
-- **golangci-lint (Linter):**
-  ```bash
-  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-  ```
-
-- **delve (Debugger):**
-  ```bash
-  go install github.com/go-delve/delve/cmd/dlv@latest
-  ```
 
 ---
 
-## 🧩 Guia de Plugins e Comandos
+## 🧩 Guia de Uso
 
-Abaixo você encontra a explicação do que cada plugin faz na sua configuração e exemplos práticos de uso.
+> **Dica:** `<leader>` é a tecla **Espaço** e `<localleader>` é a **vírgula** (`,`). Aperte `Espaço` e espere um instante: o **which-key** abre um menu com todos os atalhos disponíveis, agrupados por categoria.
 
-### 🧠 Inteligência de Código (LSP & Autocomplete)
+### ⌨️ Atalhos gerais
 
-Funcionalidades essenciais para entender o código, autocompletar e formatar.
-
-| Plugin | Para que serve? | Atalhos / Comandos |
+| Atalho | Modo | O que faz |
 | :--- | :--- | :--- |
-| **nvim-lspconfig** | Conecta o editor aos servidores de linguagem (Go, Java, Lua, etc) para mostrar erros e definições. | `K` - Mostra documentação (hover)<br>`gd` - Vai para definição<br>`gD` - Vai para declaração<br>`gi` - Vai para implementação<br>`<leader>gr` - Lista referências<br>`<leader>ca` - Ações de código (Code Actions) |
-| **nvim-cmp** | Motor de autocompletar (janela flutuante enquanto digita). | `<C-Space>` - Forçar menu de sugestões<br>`<C-e>` - Cancelar sugestão<br>`<Enter>` - Confirmar seleção<br>`<C-b>/<C-f>` - Rolar documentação |
-| **none-ls** | Integra formatadores e linters externos (Prettier, Stylua, etc). | `<leader>gf` - Formatar arquivo atual |
-| **Copilot** | Sugestões de IA do GitHub Copilot. | *(Texto fantasma automático)*<br>`Tab` geralmente aceita a sugestão. |
+| `<leader>w` | normal | Salvar arquivo |
+| `<leader>q` | normal | Fechar janela |
+| `<leader>Q` | normal | Sair de tudo |
+| `<C-h>` `<C-j>` `<C-k>` `<C-l>` | normal | Ir para o split da esquerda / baixo / cima / direita |
+| `<Esc>` | normal | Limpar o destaque da busca |
+| `J` / `K` | visual | Mover as linhas selecionadas para baixo / cima |
+| `<` / `>` | visual | Diminuir / aumentar a indentação sem perder a seleção |
 
-### 🛠️ Ferramentas e Navegação
+### 🧠 LSP (inteligência de código)
 
-Ferramentas para encontrar arquivos e navegar pelo projeto.
+Os servidores de linguagem são instalados pelo Mason (`:Mason` para ver o status). Os atalhos só existem em buffers com LSP ativo.
 
-| Plugin | Para que serve? | Atalhos / Comandos |
-| :--- | :--- | :--- |
-| **Telescope** | Buscador poderoso para tudo. | `<C-p>` - Buscar arquivos por nome<br>`<leader>fg` - Buscar texto dentro dos arquivos (Grep)<br>`<leader>fb` - Buscar buffers abertos |
-| **Neo-tree** | Explorador de arquivos lateral (árvore de pastas). | `<leader>e` - Abrir/Fechar explorador |
-| **Oil.nvim** | Editor de sistema de arquivos. Edite pastas como se fossem texto! | `-` - Abrir pasta pai (janela flutuante)<br>*(Edite os nomes e salve com :w para renomear/mover)* |
-| **Toggleterm** | Gerenciador de terminais integrados. | `<C-\>` - Abrir/Fechar terminal<br>`<leader>rc` - Abrir REPL de Clojure (se configurado) |
-| **nvim-dap** | Debugger (igual ao do VS Code). | `<F5>` - Iniciar/Continuar<br>`<F10>` - Passo pular (Step Over)<br>`<F11>` - Passo entrar (Step Into)<br>`<F12>` - Passo sair (Step Out)<br>`<leader>db` - Alternar Breakpoint |
+| Atalho | O que faz |
+| :--- | :--- |
+| `K` | Documentação do símbolo sob o cursor |
+| `gd` | Ir para a definição |
+| `gD` | Ir para a declaração |
+| `gi` | Ir para a implementação |
+| `gy` | Ir para a definição do tipo |
+| `gr` | Listar referências |
+| `<leader>rn` | Renomear símbolo em todo o projeto |
+| `<leader>ca` | Code actions (imports, correções rápidas...) — também no modo visual |
+| `<leader>gf` | Formatar o arquivo |
+| `]d` / `[d` | Próximo / anterior diagnóstico (erro, aviso) |
+| `<leader>cd` | Mostrar o diagnóstico da linha em uma janela flutuante |
 
-### ⚡ Edição e Produtividade
+**Formatação ao salvar:** ao salvar (`:w`), o arquivo é formatado automaticamente pelo formatter da linguagem (stylua, prettierd, goimports/gofumpt, zprint, mix format).
 
-Melhorias para manipulação de texto e velocidade de codificação.
+### ✍️ Autocomplete e IA
 
-| Plugin | Para que serve? | Atalhos / Comandos |
-| :--- | :--- | :--- |
-| **Comment.nvim** | Comentar código rapidamente. | `gcc` - Comentar linha atual<br>`gc` (modo visual) - Comentar seleção<br>`gc3j` - Comentar 3 linhas para baixo |
-| **nvim-surround** | Manipular caracteres "ao redor" (aspas, parênteses). | `ysiw"` - Adicionar " ao redor da palavra<br>`ds"` - Deletar " ao redor<br>`cs"'` - Trocar " por ' |
-| **vim-visual-multi** | Múltiplos cursores (estilo Sublime/VSCode). | `<C-d>` - Selecionar próxima ocorrência da palavra<br>`<C-Down/Up>` - Adicionar cursores verticalmente |
-| **Autopairs** | Fecha parênteses e aspas automaticamente. | *(Automático ao digitar)* |
+| Plugin | Como usar |
+| :--- | :--- |
+| **nvim-cmp** | O menu aparece enquanto você digita.<br>`<C-Space>` forçar o menu · `<CR>` confirmar · `<C-e>` cancelar · `<C-b>`/`<C-f>` rolar a documentação |
+| **LuaSnip + friendly-snippets** | Snippets prontos para várias linguagens aparecem no mesmo menu. |
+| **Copilot** | Sugestões aparecem como texto fantasma; `Tab` aceita. Na primeira vez rode `:Copilot setup` para logar no GitHub. |
+| **Claude Code** | `<leader>ai` abre o `claude` em um terminal flutuante (requer o Claude Code instalado). |
 
-### 🔧 Linguagens Específicas
+### 🛠️ Navegação e arquivos
 
-Ferramentas sob medida para linguagens específicas.
+| Plugin | Atalhos / Comandos |
+| :--- | :--- |
+| **Telescope** | `<C-p>` buscar arquivos por nome<br>`<leader>fg` buscar texto em todos os arquivos (grep)<br>`<leader>fb` buscar entre os buffers abertos<br>Dentro do Telescope: setas ou `<C-n>`/`<C-p>` para navegar, `<CR>` abrir, `<C-x>`/`<C-v>` abrir em split horizontal/vertical, `<Esc>` fechar |
+| **Neo-tree** | `<leader>e` abrir/fechar a árvore de arquivos<br>Dentro dela: `a` criar arquivo/pasta, `d` apagar, `r` renomear, `c` copiar, `m` mover, `H` mostrar ocultos, `?` ajuda |
+| **Oil.nvim** | `-` abre a pasta atual numa janela flutuante. Edite os nomes como texto e salve com `:w` para renomear, mover, criar ou apagar arquivos. |
+| **Toggleterm** | `<C-\>` abrir/fechar o terminal<br>`<leader>rc` abrir o REPL do Clojure (`clj`) |
 
-| Plugin | Para que serve? | Atalhos / Comandos |
-| :--- | :--- | :--- |
-| **go.nvim** | Canivete suíço para Go. | `<leader>tt` - Rodar testes<br>`<leader>tf` - Rodar função de teste<br>`<leader>tC` - Ver cobertura de testes<br>`<leader>ts` - Adicionar tags struct<br>`<leader>tr` - Remover tags |
-| **Conjure** | REPL interativo para Lisps (Clojure, Fennel). Avalia código em tempo real. | `<leader>ee` - Avaliar forma atual<br>`<leader>ef` - Avaliar arquivo inteiro<br>`<leader>er` - Recarregar namespace<br>`<leader>ed` - Ver documentação da palavra sob cursor |
+### 🌿 Git (gitsigns)
 
-### 🎨 Visual e Interface
+As alterações aparecem na coluna da esquerda. Um *hunk* é um bloco de linhas alteradas.
 
-Plugins que deixam o editor bonito e informativo.
+| Atalho | O que faz |
+| :--- | :--- |
+| `]c` / `[c` | Próximo / anterior hunk |
+| `<leader>hp` | Pré-visualizar o hunk |
+| `<leader>hs` / `<leader>hr` | Stage / reset do hunk (no modo visual, só das linhas selecionadas) |
+| `<leader>hu` | Desfazer o último stage |
+| `<leader>hS` / `<leader>hR` | Stage / reset do arquivo inteiro |
+| `<leader>hb` | Blame completo da linha |
+| `<leader>tb` | Liga/desliga o blame inline na linha atual |
+| `<leader>hd` / `<leader>hD` | Diff do arquivo contra o index / contra o último commit |
+| `<leader>td` | Mostrar/ocultar as linhas apagadas |
 
-*   **Alpha:** Tela inicial (Dashboard) com o logo.
-*   **Catppuccin:** O tema de cores atual.
-*   **Lualine:** Barra de status no rodapé (mostra modo, git branch, erros).
-*   **Indent-blankline:** Linhas verticais que mostram a indentação do código.
-*   **Which-key:** Menu de ajuda que aparece ao pressionar teclas (ex: pressione `<espaço>` e espere).
-*   **Gitsigns:** Mostra alterações do Git na lateral esquerda (linhas adicionadas/removidas).
+### 🐞 Debug (nvim-dap)
+
+A interface (dap-ui) abre sozinha ao iniciar o debug e fecha ao terminar. Configurado para **Go** (delve) e **JavaScript/TypeScript**.
+
+| Atalho | O que faz |
+| :--- | :--- |
+| `<leader>db` | Liga/desliga breakpoint na linha |
+| `<F5>` | Iniciar / continuar |
+| `<F10>` | Step over (próxima linha) |
+| `<F11>` | Step into (entrar na função) |
+| `<F12>` | Step out (sair da função) |
+| `<leader>dr` | Abrir/fechar o REPL do debugger |
+
+### ⚡ Edição
+
+| Plugin | Como usar |
+| :--- | :--- |
+| **Comment.nvim** | `gcc` comentar a linha · `gc` no modo visual comentar a seleção · `gc3j` comentar 3 linhas para baixo |
+| **nvim-surround** | `ysiw"` colocar `"` em volta da palavra · `ds"` remover as `"` · `cs"'` trocar `"` por `'` · `S"` no modo visual |
+| **vim-visual-multi** | `<C-n>` selecionar a palavra e as próximas ocorrências (cada `<C-n>` adiciona mais uma) · `<C-Down>`/`<C-Up>` adicionar cursores na vertical · `q` pular uma ocorrência · `<Esc>` sair |
+| **nvim-autopairs** | Fecha parênteses, colchetes e aspas automaticamente. |
+
+### 🔧 Linguagens específicas
+
+| Plugin | Atalhos / Comandos |
+| :--- | :--- |
+| **go.nvim** (Go) | `<leader>tt` rodar os testes · `<leader>tf` rodar o teste sob o cursor · `<leader>tC` cobertura · `<leader>ts`/`<leader>tr` adicionar/remover tags na struct |
+| **Conjure** (Clojure, Fennel) | Abra o REPL (`<leader>rc` ou `clj` em outro terminal) e avalie o código:<br>`<leader>ee` avaliar a forma atual · `<leader>ef` avaliar o arquivo · `<leader>er` recarregar o namespace · `<leader>ed` documentação da palavra sob o cursor<br>O Conjure também tem os próprios atalhos com `<localleader>` (`,`); veja `:help conjure`. |
+| **vim-sexp** (Clojure) | Edição estrutural de parênteses: `>)` / `<)` empurrar/puxar o parêntese de fechamento, `>f` / `<f` mover a forma. |
+
+### 📝 Markdown
+
+| Plugin | Atalhos / Comandos |
+| :--- | :--- |
+| **render-markdown.nvim** | Mostra o markdown formatado dentro do próprio buffer (títulos, tabelas, checkboxes, blocos de código). Automático em arquivos `.md`; a linha do cursor e o modo insert mostram o texto cru para editar.<br>`<leader>mr` liga/desliga o render |
+| **live-preview.nvim** | Abre o markdown (ou HTML) no navegador, atualizando enquanto você digita.<br>`<leader>mp` iniciar o preview · `<leader>ms` parar · `<leader>mf` escolher outro arquivo |
+
+### 🌐 Cliente HTTP (hurl.nvim)
+
+Requisições HTTP ficam em arquivos `.hurl` e são executadas pelo [Hurl](https://hurl.dev) (veja os [requisitos](#cliente-http-hurlnvim)). Como o Hurl é uma ferramenta de linha de comando, os mesmos arquivos também rodam no terminal e no CI.
+
+#### Atalhos (em arquivos `.hurl`)
+
+| Atalho | O que faz |
+| :--- | :--- |
+| `<leader>rr` | Executa a requisição sob o cursor |
+| `<leader>ra` | Executa todas as requisições do arquivo (no modo visual, só as selecionadas) |
+| `<leader>re` | Executa do início do arquivo até a requisição atual (útil quando ela depende de um login antes) |
+| `<leader>rs` | Repete a última execução |
+| `<leader>rl` | Mostra de novo a última resposta |
+| `<leader>rt` | Alterna a exibição da resposta entre split e popup |
+| `<leader>rv` | Executa em modo verbose (mostra a requisição e os headers enviados/recebidos) |
+| `<leader>rm` | Ver e editar as variáveis |
+
+Na janela de resposta, `q` fecha.
+
+#### Formato básico
+
+Cada requisição é: **método + URL**, depois os **headers**, depois o **body**. Uma linha `HTTP <status>` opcional verifica o status. Requisições são separadas apenas pela próxima linha com método.
+
+```hurl
+# GET simples
+GET https://jsonplaceholder.typicode.com/posts/1
+
+# GET verificando o status
+GET https://jsonplaceholder.typicode.com/posts/1
+HTTP 200
+```
+
+#### Query params, headers e body
+
+```hurl
+# Query params (equivale a ?userId=1&_limit=5)
+GET https://jsonplaceholder.typicode.com/posts
+[Query]
+userId: 1
+_limit: 5
+
+# POST com JSON e headers
+POST https://jsonplaceholder.typicode.com/posts
+Content-Type: application/json
+Accept: application/json
+{
+  "title": "Meu post",
+  "body": "Conteúdo",
+  "userId": 1
+}
+HTTP 201
+
+# PUT e DELETE
+PUT https://jsonplaceholder.typicode.com/posts/1
+Content-Type: application/json
+{ "id": 1, "title": "Atualizado", "body": "Novo conteúdo", "userId": 1 }
+
+DELETE https://jsonplaceholder.typicode.com/posts/1
+HTTP 200
+
+# Formulário (application/x-www-form-urlencoded)
+POST https://httpbin.org/post
+[Form]
+usuario: fernando
+lembrar: true
+
+# Upload de arquivo (multipart/form-data)
+POST https://httpbin.org/post
+[Multipart]
+descricao: Meu arquivo
+arquivo: file,dados.txt;
+
+# Autenticação Basic
+GET https://httpbin.org/basic-auth/user/pass
+[BasicAuth]
+user: pass
+```
+
+#### Variáveis e ambientes
+
+Use `{{nome}}` para variáveis. Elas ficam em um arquivo `vars.env` na mesma pasta do `.hurl` (ou em uma pasta acima), no formato `chave=valor`:
+
+```
+# vars.env
+baseUrl=http://localhost:8080
+user=fernando
+password=segredo
+```
+
+```hurl
+GET {{baseUrl}}/health
+HTTP 200
+```
+
+Para ter vários ambientes, crie um arquivo por ambiente (por exemplo `vars.env`, `staging.env`, `prod.env`) e troque com `:HurlSelectEnvFile`. Para mudar uma variável só na sessão atual: `:HurlSetVariable baseUrl http://localhost:3000`.
+
+> ⚠️ Se o arquivo de variáveis tiver senhas ou tokens, coloque-o no `.gitignore`.
+
+#### Encadeando requisições (login → token)
+
+`[Captures]` salva valores da resposta em variáveis que as requisições seguintes do mesmo arquivo podem usar. Execute com `<leader>ra` (todas) ou `<leader>re` (até a atual).
+
+```hurl
+# 1. Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+{
+  "user": "{{user}}",
+  "password": "{{password}}"
+}
+HTTP 200
+[Captures]
+token: jsonpath "$.token"
+
+# 2. Criar um pedido usando o token
+POST {{baseUrl}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "product": "teclado", "quantity": 1 }
+HTTP 201
+[Captures]
+orderId: jsonpath "$.id"
+
+# 3. Buscar o pedido criado
+GET {{baseUrl}}/orders/{{orderId}}
+Authorization: Bearer {{token}}
+HTTP 200
+```
+
+Além de `jsonpath`, dá para capturar com `header "Nome"`, `cookie "nome"`, `regex "padrão"` e `xpath "..."`.
+
+#### Verificando respostas (testes)
+
+`[Asserts]` transforma o arquivo em teste de API: se alguma verificação falhar, o Hurl mostra qual foi.
+
+```hurl
+GET {{baseUrl}}/orders
+Authorization: Bearer {{token}}
+HTTP 200
+[Asserts]
+header "Content-Type" contains "application/json"
+jsonpath "$.orders" count > 0
+jsonpath "$.orders[0].id" exists
+jsonpath "$.orders[0].status" == "PAID"
+jsonpath "$.total" >= 100
+duration < 1000
+```
+
+#### No terminal e no CI
+
+```bash
+# Executar e ver a resposta da última requisição
+hurl --variables-file vars.env api.hurl
+
+# Ver tudo que foi enviado/recebido
+hurl --very-verbose --variables-file vars.env api.hurl
+
+# Rodar como testes (relatório de sucesso/falha)
+hurl --test --variables-file vars.env tests/*.hurl
+
+# Passar uma variável na hora
+hurl --variable baseUrl=http://localhost:3000 api.hurl
+```
+
+Documentação completa do formato: [hurl.dev/docs/hurl-file.html](https://hurl.dev/docs/hurl-file.html) · Exemplos: [hurl.dev/docs/samples.html](https://hurl.dev/docs/samples.html).
+
+### 🎨 Visual e interface
+
+*   **Catppuccin:** tema de cores.
+*   **Alpha:** tela inicial (dashboard) ao abrir o `nvim` sem arquivo.
+*   **Lualine:** barra de status no rodapé (modo, branch do git, diagnósticos).
+*   **Indent-blankline:** linhas verticais que mostram a indentação.
+*   **Which-key:** menu de atalhos ao apertar `Espaço` (ou qualquer prefixo) e esperar.
+*   **Treesitter:** destaque de sintaxe. Para instalar o parser de outra linguagem: `:TSInstall <linguagem>`.
+
+## 🩺 Problemas comuns
+
+| Problema | Solução |
+| :--- | :--- |
+| Ícones aparecem como quadrados ou `?` | Instale uma Nerd Font e configure o terminal para usá-la. |
+| `<leader>fg` não encontra nada | Instale o `ripgrep` e rode `:checkhealth telescope`. |
+| Erro ao compilar `telescope-fzf-native` | Instale `make` e `gcc` e rode `:Lazy build telescope-fzf-native.nvim`. |
+| Sem cor de sintaxe em alguma linguagem | `:TSInstall <linguagem>` (requer o `tree-sitter-cli`). |
+| LSP não inicia | Abra `:Mason` para ver se o servidor instalou e `:checkhealth vim.lsp` para detalhes. |
+| `<leader>rr` não faz nada em `.hurl` | Verifique se o `hurl` está instalado (`hurl --version`). |
+| Plugins desatualizados ou com erro | `:Lazy sync` atualiza tudo; `:Lazy` mostra o status de cada plugin. |

@@ -24,7 +24,7 @@
 │       ├── conjure-repl.lua  # conjure + vim-sexp + parinfer-rust (Clojure/Fennel/Janet)
 │       ├── catppuccin.lua    # colorscheme catppuccin (tema principal)
 │       ├── copilot.lua       # github copilot
-│       ├── kulala.lua        # cliente HTTP (.http files)
+│       ├── hurl.lua          # hurl.nvim: cliente HTTP para arquivos .hurl (requer binário `hurl` + `jq`)
 │       ├── markdown.lua      # render-markdown (render no buffer) + live-preview (preview no navegador)
 │       ├── go.lua            # go.nvim (GoTest, GoCoverage, AddTags)
 │       ├── oil.lua           # oil.nvim
@@ -74,7 +74,7 @@
 - `<leader>ca` — code action
 - `<leader>rn` — rename symbol
 - `<leader>db` — DAP toggle breakpoint
-- `<leader>rr/rs/ra/rt/rh` — Kulala HTTP
+- `<leader>rr/ra/re/rs/rl/rt/rv/rm` — Hurl HTTP (só em buffers .hurl)
 - `<leader>mr/mp/ms/mf` — Markdown: toggle render / iniciar preview / parar preview / escolher arquivo
 - `<leader>ai` — Claude Code CLI (toggleterm float)
 - `<leader>rc` — Clojure REPL (toggleterm)
@@ -97,8 +97,10 @@
 - **Format-on-save**: configurado em `none-ls.lua` via `on_attach` do null-ls (autocmd `BufWritePre`, augroup `LspFormatting`). O `vim.lsp.buf.format` usa `filter` para rodar **apenas** os formatters do none-ls (`c.name == "null-ls"`), evitando dupla formatação com o LSP da linguagem (ex: gopls). Formatação manual também disponível em `<leader>gf` (LSP).
 - **Telescope**: usa `telescope-fzf-native` (compilado via `make`, requer toolchain C) para busca fuzzy rápida. Setup, extensões (`ui-select`, `fzf`) e keymaps ficam todos no mesmo bloco em `telescope.lua`.
 - Parinfer: `parinfer-rust` está comentado em `conjure-repl.lua` pois requer `cargo` (Rust) para compilar. Para ativar, instalar Rust (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`) e descomentar a linha.
-- **Treesitter**: usa o branch `main` (nova API). NÃO usa `setup()` com `ensure_installed`/`highlight`/`auto_install` — essas opções não existem mais. O highlight é automático via ftplugin. Para instalar parsers: `:TSInstall <lang>`. Requer `tree-sitter-cli` instalado (`npm install -g tree-sitter-cli`). Parsers instalados: lua, vim, bash, json, yaml, markdown, markdown_inline, typescript, tsx, javascript, go, kotlin, clojure, elixir, heex, python, query, regex, gomod, gowork, gosum, html.
+- **Treesitter**: usa o branch `main` (nova API). NÃO usa `setup()` com `ensure_installed`/`highlight`/`auto_install` — essas opções não existem mais. O highlight é automático via ftplugin. Para instalar parsers: `:TSInstall <lang>`. Requer `tree-sitter-cli` instalado (`npm install -g tree-sitter-cli`). Parsers instalados: lua, vim, bash, json, yaml, markdown, markdown_inline, typescript, tsx, javascript, go, kotlin, clojure, elixir, heex, python, query, regex, gomod, gowork, gosum, html, hurl.
 - `mason-lspconfig` tem `automatic_enable = { exclude = { "stylua" } }` para evitar que o stylua seja ativado como LSP server (conflito com none-ls que já o usa como formatter).
 - Copilot: usa `github/copilot.vim` com npx. O `@github/copilot-language-server` é baixado via npx na primeira execução e fica em cache em `~/.npm/_npx/`. O warning "not found and will be installed" é normal apenas na primeira vez ou quando o servidor atualiza.
 - Clipboard WSL: detectado automaticamente via `uname -r` em `options.lua`.
 - O arquivo `debbuging.lua` tem typo no nome (intencionalmente mantido para não quebrar lazy).
+- **Cliente HTTP**: usa `hurl.nvim` (arquivos `.hurl`), que chama o binário [Hurl](https://hurl.dev). O kulala.nvim foi removido porque o backend (kulala-core) virou código fechado e exige token de licença. Variáveis ficam em `vars.env` (formato `chave=valor`).
+- **README.md** é público e usado por outras pessoas: toda dependência externa nova (binário, fonte, toolchain) deve ser adicionada na seção "📦 Requisitos", com comando de instalação para Arch, Ubuntu e macOS.
