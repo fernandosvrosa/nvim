@@ -27,7 +27,7 @@ Configuração do Neovim usando [lazy.nvim](https://github.com/folke/lazy.nvim).
 | prettier *(opcional)* | Formata respostas HTML | `npm install -g prettier` | `npm install -g prettier` | `npm install -g prettier` |
 | tidy *(opcional)* | Formata respostas XML | `pacman -S tidy` | `apt install tidy` | `brew install tidy-html5` |
 
-Depois de instalar, rode `:TSInstall hurl` para ter o highlight dos arquivos `.hurl`.
+Depois de instalar, rode `:TSInstall hurl`: o parser é necessário para o highlight **e** para o `<leader>rr` saber qual requisição está sob o cursor.
 
 ### Por linguagem (só instale as que você usa)
 
@@ -48,6 +48,16 @@ Depois de instalar, rode `:TSInstall hurl` para ter o highlight dos arquivos `.h
 | [Claude Code](https://claude.com/claude-code) (`claude`) | Terminal do Claude em `<leader>ai`. |
 | Conta do GitHub Copilot | Rodar `:Copilot setup` na primeira vez. |
 | WSL | O clipboard do Windows é detectado sozinho (usa `clip.exe` e `powershell.exe`). |
+
+### Primeira vez: instalar os parsers do treesitter
+
+Os parsers de sintaxe **não** são instalados sozinhos. Depois de abrir o Neovim pela primeira vez (e o Lazy terminar de instalar os plugins), rode:
+
+```
+:TSInstall lua vim vimdoc bash json yaml markdown markdown_inline typescript tsx javascript go gomod gowork gosum kotlin java clojure elixir heex python query regex html hurl
+```
+
+Pode remover da lista as linguagens que você não usa. Para atualizar depois: `:TSUpdate`.
 
 ### Verificando a instalação
 
@@ -351,5 +361,5 @@ Documentação completa do formato: [hurl.dev/docs/hurl-file.html](https://hurl.
 | Erro ao compilar `telescope-fzf-native` | Instale `make` e `gcc` e rode `:Lazy build telescope-fzf-native.nvim`. |
 | Sem cor de sintaxe em alguma linguagem | `:TSInstall <linguagem>` (requer o `tree-sitter-cli`). |
 | LSP não inicia | Abra `:Mason` para ver se o servidor instalou e `:checkhealth vim.lsp` para detalhes. |
-| `<leader>rr` não faz nada em `.hurl` | Verifique se o `hurl` está instalado (`hurl --version`). |
+| `<leader>rr` diz "no HTTP method found" em `.hurl` | Instale o parser: `:TSInstall hurl`. Verifique também se o `hurl` está instalado (`hurl --version`). |
 | Plugins desatualizados ou com erro | `:Lazy sync` atualiza tudo; `:Lazy` mostra o status de cada plugin. |
